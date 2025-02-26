@@ -12,17 +12,25 @@ import { Router } from '@angular/router';
 })
 export class HomePage {
 
-  pokemon:any = {
-    nome: null,
-    poder: null
-  };
+  filter: string =`fields=name,borders,flags`;
+  url: string =`https://restcountries.com/v3.1/all?${this.filter}`;
+  dados: any = {};
 
-  constructor( 
-    public crudService: CrudService
-  ){ }
+  is_loading: boolean = false;
+ 
+  constructor( ){
+    this.is_loading = true;
+    fetch(this.url)
+    .then(dados=>dados.json())
+    .then(dados=>{console.log(dados);
+      this.dados=dados;
+    })
+    .catch(_=>{console.log(_);})
+    .finally(()=>{
+      this.is_loading=false;
+      console.log('Requisição Finalizada');
+    })
+   }
 
-  enviar() {
-    this.crudService.insert(this.pokemon, 'pokemons');
-  }
-
+ 
 }
